@@ -1,5 +1,5 @@
 import { StyleSheet, View } from "react-native";
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { Ionicons } from "@expo/vector-icons";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { HomeScreen, ProfileScreen, ShoppingCartScreen } from "../screen";
@@ -7,9 +7,8 @@ import StackNavigation from "./StackNavigation";
 import { SIZES } from "../common";
 import { useDispatch, useSelector } from "react-redux";
 import { useGetShoppingCartQuery } from "../redux/apis/shoppingCartApi";
-import { userTest } from "../common/SD";
 import { setShoppingCart } from "../redux/shoppingCartSlice";
-import { cartItemModel } from "../interfaces";
+import { cartItemModel, userModel } from "../interfaces";
 import { RootState } from "../redux/store";
 import { Badge } from "react-native-paper";
 import { NavigationContainer } from "@react-navigation/native";
@@ -17,18 +16,28 @@ import { NavigationContainer } from "@react-navigation/native";
 const Tab = createBottomTabNavigator();
 
 export default function BottomTabNavigation() {
+  const [skip, setSkip] = useState(true);
+  const userData: userModel = useSelector(
+    (state: RootState) => state.userAuthStore
+  );
   const shoppingCartFromStore: cartItemModel[] = useSelector(
     (state: RootState) => state.shoppingCartStore.cartItems ?? []
   );
   const dispatch = useDispatch();
-  const { data, isLoading } = useGetShoppingCartQuery(userTest);
+  const { data, isLoading } = useGetShoppingCartQuery(userData.id, {
+    skip: skip,
+  });
 
   useEffect(() => {
-    if (!isLoading) {
+    if (!isLoading && data) {
       console.log(data.result);
       dispatch(setShoppingCart(data.result?.cartItems));
     }
   }, [data]);
+
+  useEffect(() => {
+    if (userData.id) setSkip(false);
+  }, [userData]);
 
   return (
     <NavigationContainer>
@@ -68,10 +77,28 @@ export default function BottomTabNavigation() {
             headerShown: false,
           })}
         >
-          <Tab.Screen name="HOME" component={StackNavigation} />
-          <Tab.Screen name="CART" component={ShoppingCartScreen} />
-          <Tab.Screen name="SETTING" component={HomeScreen} />
-          <Tab.Screen name="PROFILE" component={ProfileScreen} />
+          <Tab.Screen
+            name="HOME"
+            component={StackNavigation}
+            initialParams={{ screen: "HomeScreen" }}
+          />
+          {userData?.id.length > 0 && (
+            <Tab.Screen
+              name="CART"
+              component={StackNavigation}
+              initialParams={{ screen: "ShoppingCartScreen" }}
+            />
+          )}
+          <Tab.Screen
+            name="SETTING"
+            component={StackNavigation}
+            initialParams={{ screen: "HomeScreen" }}
+          />
+          <Tab.Screen
+            name="PROFILE"
+            component={StackNavigation}
+            initialParams={{ screen: "ProfileScreen" }}
+          />
         </Tab.Navigator>
       </View>
     </NavigationContainer>

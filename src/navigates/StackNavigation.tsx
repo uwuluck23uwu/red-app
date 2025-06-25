@@ -4,6 +4,7 @@ import { GestureHandlerRootView } from "react-native-gesture-handler";
 import {
   HomeScreen,
   MenuItemDetailScreen,
+  PaymentScreen,
   ProfileScreen,
   ShoppingCartScreen,
 } from "../screen";
@@ -15,7 +16,7 @@ const Stack = createNativeStackNavigator<RootStackParamList>();
 export default function StackNavigation() {
   return (
     <GestureHandlerRootView style={{ flex: 1 }}>
-      <Stack.Navigator initialRouteName="HomeScreen">
+      <Stack.Navigator>
         <Stack.Screen
           name="HomeScreen"
           component={HomeScreen}
@@ -49,6 +50,12 @@ export default function StackNavigation() {
         <Stack.Screen
           name="Register"
           component={Register}
+          options={{ headerShown: false }}
+        />
+
+        <Stack.Screen
+          name="PaymentScreen"
+          component={PaymentScreen}
           options={{ headerShown: false }}
         />
       </Stack.Navigator>

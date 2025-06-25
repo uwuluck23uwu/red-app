@@ -66,9 +66,7 @@ export default function ProfileScreen() {
         </Text>
 
         {!userData.id ? (
-          <TouchableOpacity
-            onPress={() => navigate("HOME", { screen: "Login" })}
-          >
+          <TouchableOpacity onPress={() => navigate("Login")}>
             <View style={styles.loginBtn}>
               <Text style={styles.menuText}>L O G I N</Text>
             </View>
