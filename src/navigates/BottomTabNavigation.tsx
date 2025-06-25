@@ -4,8 +4,6 @@ import { Ionicons } from "@expo/vector-icons";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { HomeScreen, ProfileScreen, ShoppingCartScreen } from "../screen";
 import StackNavigation from "./StackNavigation";
-import ProfileStackNavigation from "./ProfileStackNavigation";
-import { NavigationContainer } from "@react-navigation/native";
 import { SIZES } from "../common";
 import { useDispatch, useSelector } from "react-redux";
 import { useGetShoppingCartQuery } from "../redux/apis/shoppingCartApi";
@@ -14,6 +12,7 @@ import { setShoppingCart } from "../redux/shoppingCartSlice";
 import { cartItemModel } from "../interfaces";
 import { RootState } from "../redux/store";
 import { Badge } from "react-native-paper";
+import { NavigationContainer } from "@react-navigation/native";
 
 const Tab = createBottomTabNavigator();
 

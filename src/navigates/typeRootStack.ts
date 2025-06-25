@@ -1,8 +1,7 @@
 import { menuItemModel } from "../interfaces";
 
 export type RootStackParamList = {
-  // HOME: { screen?: string };
-  MainApp: undefined;
+  HOME: { screen?: string };
   HomeScreen: undefined;
   MenuItemDetailScreen: { id: number };
   ShoppingCartScreen: undefined;

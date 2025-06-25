@@ -18,19 +18,23 @@ import { RootStackParamList } from "../navigates/typeRootStack";
 import { NavigationProp, useNavigation } from "@react-navigation/native";
 import { SD_Roles } from "../common/SD";
 import { List } from "react-native-paper";
+import { useDispatch, useSelector } from "react-redux";
+import { userModel } from "../interfaces";
+import { RootState } from "../redux/store";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { emptyUserState, setLoggedInUser } from "../redux/userAuthSlice";
 
 export default function ProfileScreen() {
+  const dispatch = useDispatch();
   const { navigate } = useNavigation<NavigationProp<RootStackParamList>>();
 
-  const userData = {
-    fullName: "Test Name",
-    id: "",
-    email: "Test@email.com",
-    role: "admin",
-  };
+  const userData: userModel = useSelector(
+    (state: RootState) => state.userAuthStore
+  );
 
   const userLogout = async () => {
-    // logout logic here
+    await AsyncStorage.removeItem("token");
+    dispatch(setLoggedInUser({ ...emptyUserState }));
   };
 
   const logout = () => {
@@ -62,7 +66,9 @@ export default function ProfileScreen() {
         </Text>
 
         {!userData.id ? (
-          <TouchableOpacity onPress={() => navigate("Login")}>
+          <TouchableOpacity
+            onPress={() => navigate("HOME", { screen: "Login" })}
+          >
             <View style={styles.loginBtn}>
               <Text style={styles.menuText}>L O G I N</Text>
             </View>
