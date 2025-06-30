@@ -1,7 +1,5 @@
-export const baseUrl = "https://879a-202-28-123-199.ngrok-free.app";
+export const baseUrl = "https://9721-202-28-123-199.ngrok-free.app";
 export const baseUrlAPI = baseUrl + "/api/";
-
-export const userTest = "c0e47c85-17d5-40a8-b2b6-1ed6d89b7d97";
 
 export enum SD_Roles {
   ADMIN = "admin",

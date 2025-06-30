@@ -70,8 +70,8 @@ export default function Register() {
 
   const initialData: registerDto = {
     username: "admin",
-    password: "123",
-    name: "Test admin",
+    password: "admin@123",
+    name: "admin",
     role: "admin",
   };
 

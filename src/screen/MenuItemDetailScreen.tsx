@@ -5,10 +5,14 @@ import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { COLORS, MainLoader } from "../common";
 import styles from "./MenuItemDetailScreen.style";
 import { Ionicons, SimpleLineIcons, Fontisto } from "@expo/vector-icons";
-import { baseUrl, userTest } from "../common/SD";
+import { baseUrl } from "../common/SD";
 import { FormButton1 } from "../ui";
 import { useGetMenuItemByIdQuery } from "../redux/apis/menuItemApi";
 import { useUpdateShoppingCartMutation } from "../redux/apis/shoppingCartApi";
+import { useSelector } from "react-redux";
+import { userModel } from "../interfaces";
+import { RootState } from "../redux/store";
+import { NavigationProp, useNavigation } from "@react-navigation/native";
 
 type Props = NativeStackScreenProps<RootStackParamList, "MenuItemDetailScreen">;
 
@@ -18,6 +22,10 @@ export default function MenuItemDetailScreen({ navigation, route }: Props) {
   const [quantity, setQuantity] = useState(1);
   const [isAddingToCart, setIsAddingToCart] = useState<boolean>(false);
   const [updateShoppingCart] = useUpdateShoppingCartMutation();
+  const userData: userModel = useSelector(
+    (state: RootState) => state.userAuthStore
+  );
+  const { navigate } = useNavigation<NavigationProp<RootStackParamList>>();
 
   const handleQuantity = (counter: number) => {
     let newQuantity = quantity + counter;
@@ -29,11 +37,15 @@ export default function MenuItemDetailScreen({ navigation, route }: Props) {
   };
 
   const handleAddToCart = async (menuItemId: number) => {
+    if (!userData.id) {
+      navigate("Login");
+    }
+
     setIsAddingToCart(true);
     const response = await updateShoppingCart({
       menuItemId: menuItemId,
       updateQuantityBy: quantity,
-      userId: userTest,
+      userId: userData.id,
     });
     console.log(response);
     setIsAddingToCart(false);

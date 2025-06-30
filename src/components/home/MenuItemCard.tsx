@@ -1,29 +1,38 @@
 import { Text, TouchableOpacity, View, Image } from "react-native";
 import React, { useState } from "react";
-import { menuItemModel } from "../../interfaces";
+import { menuItemModel, userModel } from "../../interfaces";
 import styles from "./MenuItemCard.style";
-import { baseUrl, userTest } from "../../common/SD";
+import { baseUrl } from "../../common/SD";
 import { Ionicons } from "@expo/vector-icons";
 import { COLORS, MiniLoader } from "../../common";
 import { NavigationProp, useNavigation } from "@react-navigation/native";
 import { RootStackParamList } from "../../navigates";
 import { useUpdateShoppingCartMutation } from "../../redux/apis/shoppingCartApi";
+import { useSelector } from "react-redux";
+import { RootState } from "../../redux/store";
 
 interface Props {
   menuItem: menuItemModel;
 }
 
 export default function MenuItemCard(item: Props) {
+  const userData: userModel = useSelector(
+    (state: RootState) => state.userAuthStore
+  );
   const { navigate } = useNavigation<NavigationProp<RootStackParamList>>();
   const [isAddingToCart, setIsAddingToCart] = useState<boolean>(false);
   const [updateShoppingCart] = useUpdateShoppingCartMutation();
 
   const handleAddToCart = async (menuItemId: number) => {
+    if (!userData.id) {
+      navigate("Login");
+    }
+
     setIsAddingToCart(true);
     const response = await updateShoppingCart({
       menuItemId: menuItemId,
       updateQuantityBy: 1,
-      userId: userTest,
+      userId: userData.id,
     });
     console.log(response);
     setTimeout(() => {
